@@ -50,4 +50,39 @@ accuracy = float(np.sum(preds==y_test))/y_test.shape[0]
 print("accuracy: %f" % (accuracy))
 
 
+"""
 
+Measuring the Accuracy: 
+
+XGBoost's learning API:
+
+XGBoost gets its lauded performance and efficiency gains by utilizing its own optimized data structure for datasets called a DMatrix.
+
+In the above model the input datasets were converted into DMatrix data on the fly, but when you use the xgboost cv object, 
+you have to first explicitly convert your data into a DMatrix
+
+reg:logistic gives the probability of belonging to a particular class.
+
+params is your parameter dictionary, 
+folds is the number of cross-validation folds (3),
+num_boosting_rounds is the number of trees we want to build (5), 
+metrics is the metric you want to compute (this will be "error")
+
+"""
+
+
+
+# Create the DMatrix: churn_dmatrix
+churn_dmatrix = xgb.DMatrix(data=churn_data.iloc[ :,: -1], label=churn_data.month_5_still_here)
+
+# Create the parameter dictionary: params
+params = {"objective":"reg:logistic", "max_depth":3}
+
+# Perform cross-validation: cv_results
+cv_results = xgb.cv(dtrain=churn_dmatrix, params=params, nfold=3, num_boost_round=5, metrics="error", as_pandas=True, seed=123)
+
+# Print cv_results
+print(cv_results)
+
+# Print the accuracy
+print(((1-cv_results["test-error-mean"]).iloc[-1]))
