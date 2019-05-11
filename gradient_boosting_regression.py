@@ -1,6 +1,6 @@
 #Linear Regression
-import xgboost as xg
-from sklearn.model _selection import train_test_split
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
 
 
 """Using Decision Trees as Base Learners : 
@@ -59,7 +59,16 @@ rmse = np.sqrt(mean_squared_error(y_test,preds))
 print("RMSE: %f" % (rmse))
 
 
-#Model Evaluation:
+
+"""
+
+Model Evaluation:
+
+as_pandas = True : Returns results as a dataframe. 
+
+"""
+#M
+
 
 # Create the DMatrix: housing_dmatrix
 housing_dmatrix = xgb.DMatrix(data=X, label=y)
