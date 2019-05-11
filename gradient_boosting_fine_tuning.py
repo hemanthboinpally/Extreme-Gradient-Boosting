@@ -1,6 +1,7 @@
 
 import xgboost as xgb
 import pandas as pd
+import sklearn.
 """
 1)
 
@@ -284,3 +285,79 @@ print(pd.DataFrame(list(zip(colsample_bytree_vals, best_rmse)), columns=["colsam
 """
 
 
+"""
+6) Grid Search CV:
+
+To find the best model exhaustively from a collection of possible parameter values across multiple parameters simultaneously.
+
+"""
+
+
+# Create your housing DMatrix: housing_dmatrix
+housing_dmatrix = xgb.DMatrix(data=X, label=y)
+
+# Create the parameter grid: gbm_param_grid
+gbm_param_grid = {
+    'colsample_bytree': [0.3, 0.7],
+    'n_estimators': [50],
+    'max_depth': [2, 5]
+}
+
+# Instantiate the regressor: gbm
+gbm = xgb.XGBRegressor()
+
+# Perform grid search: grid_mse
+grid_mse = GridSearchCV(estimator=gbm,param_grid=gbm_param_grid,cv=4,scoring="neg_mean_squared_error",verbose=1)
+
+
+# Fit grid_mse to the data
+grid_mse.fit(X,y)
+
+# Print the best parameters and lowest RMSE
+print("Best parameters found: ", grid_mse.best_params_)
+print("Lowest RMSE found: ", np.sqrt(np.abs(grid_mse.best_score_)))
+
+"""
+   OUTPUT:
+    Fitting 4 folds for each of 4 candidates, totalling 16 fits
+    Best parameters found:  {'colsample_bytree': 0.7, 'max_depth': 5, 'n_estimators': 50}
+    Lowest RMSE found:  30342.16964561695
+
+"""
+
+########
+
+"""
+7) RandomSearch CV:
+
+Just a subset of parameter combinations are taken into consideration. 
+
+
+"""
+
+
+# Create the parameter grid: gbm_param_grid
+gbm_param_grid = {
+    'n_estimators': [25],
+    'max_depth': np.arange(2, 12)
+}
+
+# Instantiate the regressor: gbm
+gbm = xgb.XGBRegressor(n_estimators=10)
+
+# Perform random search: grid_mse
+randomized_mse = RandomizedSearchCV(estimator=gbm,param_distributions=gbm_param_grid,scoring="neg_mean_squared_error",n_iter=5,cv=4)
+
+
+# Fit randomized_mse to the data
+randomized_mse.fit(X,y)
+
+# Print the best parameters and lowest RMSE
+print("Best parameters found: ", randomized_mse.best_params_)
+print("Lowest RMSE found: ", np.sqrt(np.abs(randomized_mse.best_score_)))
+
+"""
+    Best parameters found:  {'n_estimators': 25, 'max_depth': 5}
+    Lowest RMSE found:  36636.35808132903
+
+"""
