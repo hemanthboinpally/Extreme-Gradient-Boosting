@@ -2,7 +2,15 @@
 import xgboost as xg
 from sklearn.model _selection import train_test_split
 
-#Using Decision Trees as Base Learners
+
+"""Using Decision Trees as Base Learners : 
+
+By default, XGBoost uses trees as base learners, so you don't have to specify that you want to use trees here with booster="gbtree".
+xgboost has been imported as xgb and the arrays for the features and the target are available in X and y, respectively.
+
+"""
+
+
 # Create the training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size =.2, random_state=123)
 
@@ -20,6 +28,18 @@ rmse = np.sqrt(mean_squared_error(y_test, preds))
 print("RMSE: %f" % (rmse))
 
 #Linear base Learners
+
+"""
+Linear Base Learners : 
+
+This model, although not as commonly used in XGBoost, allows you to create a regularized linear regression using XGBoost's powerful learning API.
+Create a param dictionary like that is feed in the cross validation function.  
+
+The key-value pair that defines the booster type (base model) you need is "booster":"gblinear".
+
+Create the DMatrix objects required by the XGBoost learning API.
+
+"""
 
 # Convert the training and testing sets into DMatrixes: DM_train, DM_test
 DM_train = xgb.DMatrix(data=X_train , label=y_train)
