@@ -1,5 +1,6 @@
 
 import xgboost as xgb
+import pandas as pd
 """
 Tuning the number of boosting rounds:
 
@@ -38,8 +39,92 @@ print(pd.DataFrame(num_rounds_rmses, columns=["num_boosting_rounds", "rmse"]))
 
 
 """
+OUTPUT:
    num_boosting_rounds          rmse
 0                    5  50903.299479
 1                   10  34774.194010
 2                   15  32895.098958
+"""
+
+"""
+Automated Boosting round selection using Early Stopping:
+
+Now, instead of attempting to cherry pick the best possible number of boosting rounds, you can very easily
+have XGBoost automatically select the number of boosting rounds for you within xgb.cv(). This is done using a technique
+called early stopping.
+
+Early stopping works by testing the XGBoost model after every boosting round against a hold-out dataset 
+and stopping the creation of additional boosting rounds (thereby finishing training of the model early) 
+if the hold-out metric ("rmse" in our case) does not improve for a given number of rounds.
+Here you will use the early_stopping_rounds parameter in xgb.cv() with a large possible number of boosting rounds (50). 
+Bear in mind that if the holdout metric continuously improves up through when num_boosting_rounds is reached, 
+then early stopping does not occur.
+
+"""
+
+# Create your housing DMatrix: housing_dmatrix
+housing_dmatrix = xgb.DMatrix(data=X, label=y)
+
+# Create the parameter dictionary for each tree: params
+params = {"objective":"reg:linear", "max_depth":4}
+
+# Perform cross-validation with early stopping: cv_results
+cv_results = xgb.cv(dtrain=housing_dmatrix,folds=3,early_stopping_rounds=10,num_boost_round=50,params=params,metrics="rmse")
+
+# Print cv_results
+print(cv_results)
+
+"""
+OUTPUT:
+    train-rmse-mean  train-rmse-std  test-rmse-mean  test-rmse-std
+0     139216.236979    11003.460718   136073.533854   20847.453786
+1     100916.588541     8360.940664   100040.671875   20400.645712
+2      74266.667969     6456.598227    75446.850260   20241.439411
+3      55884.333333     5242.444592    58972.595052   19278.263295
+4      43212.674479     4511.794575    48573.604166   18256.123115
+5      34647.425781     3955.233378    42046.942057   17440.336903
+6      28930.772787     3505.470795    38143.645182   16171.500949
+7      25190.904297     3104.597775    35869.436849   15146.611817
+8      22494.291667     2783.233912    34498.792318   14115.094395
+9      20689.128255     2550.467530    33915.322916   13348.837037
+10     19572.835286     2380.505677    33390.004557   12996.970336
+11     18622.080078     2333.532159    33109.637370   12489.962565
+12     17980.963542     2218.174235    32935.100911   12244.117756
+13     17546.319987     2125.087809    32928.362631   12039.735171
+14     17099.578451     2089.417219    32758.376302   11784.010967
+15     16730.943359     2111.639547    32698.080729   11668.063282
+16     16463.676758     2132.812095    32683.291666   11626.876512
+17     16269.478190     2126.161486    32593.000000   11474.610217
+18     15975.022787     2173.858455    32471.083985   11284.396350
+19     15712.653320     2144.501656    32383.916016   11217.820410
+20     15426.445313     2133.948225    32283.158854   10990.113432
+21     15215.499674     2128.225268    32212.466146   10993.932510
+22     15042.100586     2066.260517    32135.411458   11068.126755
+23     14798.883789     2063.607809    32105.410807   11051.169790
+24     14578.954753     2014.224408    32032.337891   10888.501998
+25     14418.299805     1974.254228    32006.795573   10956.198724
+26     14179.743164     1912.758671    31948.430339   11001.611446
+27     13964.085287     1973.755878    31924.837239   10981.289079
+28     13824.422852     1942.204236    31928.699219   11007.709662
+29     13663.833985     2009.266768    31885.687500   11023.458088
+30     13515.024414     1974.453169    31891.387370   11078.143713
+31     13404.504883     1945.713066    31889.734375   11063.702025
+32     13249.442708     1984.520151    31927.427084   11069.197031
+33     13081.763997     1939.001541    31882.128255   10983.070760
+34     12928.792643     1900.396151    31842.106120   11025.148597
+35     12830.354167     1930.068975    31786.822916   10991.857811
+36     12722.168620     1932.428311    31790.183594   11044.894643
+37     12604.854818     1920.696769    31806.370443   11038.509213
+38     12420.081055     1844.526245    31772.946614   11089.692542
+39     12258.669271     1784.554713    31713.787760   11045.535600
+40     12135.880208     1795.535175    31723.000000   11072.201488
+41     11963.071940     1834.066326    31649.097005   11062.160411
+42     11823.346029     1866.911338    31626.211589   11077.289119
+43     11677.214844     1940.146153    31644.631510   11074.537585
+44     11558.674805     1958.367760    31692.708984   11103.414558
+45     11390.392903     1951.893977    31688.261067   11059.248096
+46     11242.788086     1924.091801    31676.481120   11042.301313
+47     11104.977864     1891.535074    31654.587240   11024.065677
+48     10967.748372     1889.090649    31691.982422   11065.005784
+49     10887.622070     1870.142060    31654.694661   11097.172233
 """
