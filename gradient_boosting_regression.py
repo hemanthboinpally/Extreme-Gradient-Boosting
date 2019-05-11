@@ -67,7 +67,6 @@ Model Evaluation:
 as_pandas = True : Returns results as a dataframe. 
 
 """
-#M
 
 
 # Create the DMatrix: housing_dmatrix
