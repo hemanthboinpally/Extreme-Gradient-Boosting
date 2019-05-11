@@ -1,9 +1,15 @@
+
+
+# Import xgboost
+import xgboost as xgb
+
+
 """
 XGBoost: Fit/Predict
 
 Churn Analysis of the data:
 
-Here, you'll be working with churn data.
+
 This dataset contains imaginary data from a ride-sharing app with user behaviors over their first month of app usage in a set of imaginary cities
 as well as whether they used the service 5 months after sign-up. It has been pre-loaded for you into a DataFrame called churn_data!
 
@@ -19,16 +25,13 @@ avg_dist  avg_rating_by_driver  avg_rating_of_driver  avg_inc_price  inc_pct  ..
 3      2.36                   4.9                   4.6           1.14     20.0  ...           1             1                            1                         0                   1
 4      3.13                   4.9                   4.4           1.19     11.8  ...           0             0                            1                         0                   0
 
-Your goal is to use the first month's worth of data to predict
+Goal is to use the first month's worth of data to predict
 whether the app's users will remain users of the service at the 5 month mark.
 This is a typical setup for a churn prediction problem.
 
 
 """
 
-
-# Import xgboost
-import xgboost as xgb
 
 # Create arrays for the features and the target: X, y
 X, y = churn_data.iloc[:,:-1], churn_data.iloc[:,-1]
