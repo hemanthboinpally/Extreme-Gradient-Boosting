@@ -2,6 +2,8 @@
 import xgboost as xgb
 import pandas as pd
 """
+1)
+
 Tuning the number of boosting rounds:
 
 Let's start with parameter tuning by seeing how the number
@@ -46,7 +48,12 @@ OUTPUT:
 2                   15  32895.098958
 """
 
+####################
+
+
 """
+2)
+
 Automated Boosting round selection using Early Stopping:
 
 Now, instead of attempting to cherry pick the best possible number of boosting rounds, you can very easily
@@ -127,4 +134,62 @@ OUTPUT:
 47     11104.977864     1891.535074    31654.587240   11024.065677
 48     10967.748372     1889.090649    31691.982422   11065.005784
 49     10887.622070     1870.142060    31654.694661   11097.172233
+"""
+
+
+####################
+
+"""
+3)
+
+Tuning eta / Learning Rate: 
+
+
+The learning rate in XGBoost is a parameter that can range between 0 and 1, 
+with higher values of "eta" penalizing feature weights more strongly, causing much stronger regularization.
+
+"""
+
+# Create your housing DMatrix: housing_dmatrix
+housing_dmatrix = xgb.DMatrix(data=X, label=y)
+
+# Create the parameter dictionary for each tree (boosting round)
+params = {"objective": "reg:linear", "max_depth": 3}
+
+# Create list of eta values and empty list to store final round rmse per xgboost model
+eta_vals = [0.001, 0.01, 0.1]
+best_rmse = []
+
+# Systematically vary the eta
+for curr_val in eta_vals:
+    params["eta"] = curr_val
+
+    # Perform cross-validation: cv_results
+    cv_results = xgb.cv(dtrain=housing_dmatrix, params=params, folds=3, metrics="rmse", seed=123, num_boost_round=10,
+                        early_stopping_rounds=5)
+
+    # Append the final round rmse to best_rmse
+    best_rmse.append(cv_results["test-rmse-mean"].tail().values[-1])
+
+# Print the resultant DataFrame
+print(pd.DataFrame(list(zip(eta_vals, best_rmse)), columns=["eta", "best_rmse"]))
+
+"""
+OUTPUT:
+     eta      best_rmse
+0  0.001  184300.723958
+1  0.010  169550.255208
+2  0.100   75405.712240
+
+"""
+
+
+"""
+4)
+
+Tuning max_depth:
+
+max_depth, which is the parameter that dictates the maximum depth that each tree in a boosting round can grow to.
+Smaller values will lead to shallower trees, and larger values to deeper trees.
+
 """
