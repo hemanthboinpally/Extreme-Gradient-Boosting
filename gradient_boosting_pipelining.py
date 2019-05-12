@@ -103,3 +103,52 @@ OUTPUT:
 After one hot encoding, which creates binary variables out of the categorical variables, there are now 62 columns.
 
 """
+
+
+#################
+
+
+"""
+3)
+
+Encoding categorical columns III: DictVectorizer
+
+Using a DictVectorizer on a DataFrame that has been converted to a dictionary allows you to
+get label encoding as well as one-hot encoding in one go.
+
+"""
+
+# Import DictVectorizer
+from sklearn.feature_extraction import DictVectorizer
+
+# Convert df into a dictionary: df_dict
+df_dict = df.to_dict("records")
+
+# Create the DictVectorizer object: dv
+dv = DictVectorizer(sparse=False)
+
+# Apply dv on df: df_encoded
+df_encoded = dv.fit_transform(df_dict)
+
+# Print the resulting first five rows
+print(df_encoded[:5,:])
+
+# Print the vocabulary
+print(dv.vocabulary_)
+
+"""
+OUTPUT:
+
+    {'MSSubClass': 23, 'LotFrontage': 22, 'LotArea': 21, 'OverallQual': 55, 'OverallCond': 54, 'YearBuilt': 61, 
+    'Remodeled': 59, 'GrLivArea': 11, 'BsmtFullBath': 6, 'BsmtHalfBath': 7, 'FullBath': 9, 'HalfBath': 12, 
+    'BedroomAbvGr': 0, 'Fireplaces': 8, 'GarageArea': 10, 'MSZoning=RL': 27, 'PavedDrive=Y': 58, 
+    'Neighborhood=CollgCr': 34, 'BldgType=1Fam': 1, 'HouseStyle=2Story': 18, 'SalePrice': 60, 
+    'Neighborhood=Veenker': 53, 'HouseStyle=1Story': 15, 'Neighborhood=Crawfor': 35, 'Neighborhood=NoRidge': 44, 
+    'Neighborhood=Mitchel': 40, 'HouseStyle=1.5Fin': 13, 'Neighborhood=Somerst': 50, 'Neighborhood=NWAmes': 43, 
+    'MSZoning=RM': 28, 'Neighborhood=OldTown': 46, 'Neighborhood=BrkSide': 32, 'BldgType=2fmCon': 2, 
+    'HouseStyle=1.5Unf': 14, 'Neighborhood=Sawyer': 48, 'Neighborhood=NridgHt': 45, 'Neighborhood=NAmes': 41,}
+    
+    vocabulary_ which maps the names of the features to their indices. 
+
+
+"""
