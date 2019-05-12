@@ -43,14 +43,16 @@ non_categorical_columns = X.columns[~categorical_feature_mask].tolist()
 
 # Apply numeric imputer
 numeric_imputation_mapper = DataFrameMapper(
-                                            [([numeric_feature], Imputer(strategy="median")) for numeric_feature in non_categorical_columns],
+                                            [([numeric_feature], Imputer(strategy="median"))
+                                             for numeric_feature in non_categorical_columns],
                                             input_df=True,
                                             df_out=True
                                            )
 
 # Apply categorical imputer
 categorical_imputation_mapper = DataFrameMapper(
-                                                [(category_feature, CategoricalImputer()) for category_feature in categorical_columns],
+                                                [(category_feature, CategoricalImputer())
+                                                 for category_feature in categorical_columns],
                                                 input_df=True,
                                                 df_out=True
                                                )
@@ -161,7 +163,8 @@ gbm_param_grid = {
 }
 
 # Perform RandomizedSearchCV
-randomized_roc_auc = RandomizedSearchCV(estimator=pipeline,param_distributions=gbm_param_grid, n_iter=2, scoring="roc_auc", verbose=1,cv=2)
+randomized_roc_auc = RandomizedSearchCV(estimator=pipeline,param_distributions=gbm_param_grid, n_iter=2,
+                                        scoring="roc_auc", verbose=1,cv=2)
 
 # Fit the estimator
 randomized_roc_auc.fit(X,y)
@@ -179,7 +182,8 @@ Fitting 2 folds for each of 2 candidates, totalling 4 fits
 Pipeline(memory=None,
      steps=[('featureunion', FeatureUnion(n_jobs=1,
        transformer_list=[('num_mapper', DataFrameMapper(default=False, df_out=True,
-        features=[(['age'], Imputer(axis=0, copy=True, missing_values='NaN', strategy='median', verbose=0)), (['bp'], Imputer(axis=0, copy=True, missing_values='NaN', st...
+        features=[(['age'], Imputer(axis=0, copy=True, missing_values='NaN', strategy='median', verbose=0)), (['bp'],
+         Imputer(axis=0, copy=True, missing_values='NaN', st...
        reg_alpha=0, reg_lambda=1, scale_pos_weight=1, seed=None,
        silent=True, subsample=1))])
        
