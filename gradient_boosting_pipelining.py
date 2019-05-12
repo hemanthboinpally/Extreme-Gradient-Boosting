@@ -39,7 +39,6 @@ df[categorical_columns] = df[categorical_columns].apply(lambda x: le.fit_transfo
 print(df[categorical_columns].head())
 
 
-
 """
 
       MSZoning PavedDrive Neighborhood BldgType HouseStyle
@@ -54,4 +53,53 @@ print(df[categorical_columns].head())
     2         3           2             5         0           5
     3         3           2             6         0           5
     4         3           2            15         0           5
+"""
+
+
+###################
+
+"""
+2)
+
+Encoding categorical columns II: OneHotEncoder
+
+Natural Ordering Problem. 
+
+Okay - so you have your categorical columns encoded numerically. Can you now move onto using pipelines and XGBoost?
+Not yet! In the categorical columns of this dataset, there is no natural ordering between the entries. 
+As an example: Using LabelEncoder, the CollgCr Neighborhood was encoded as 5, 
+while the Veenker Neighborhood was encoded as 24, and Crawfor as 6. Is Veenker "greater" than Crawfor and CollgCr? 
+No - and allowing the model to assume this natural ordering may result in poor performance.
+
+There is another step needed: You have to apply a one-hot encoding to create binary, or "dummy" variables. 
+
+"""
+
+# Import OneHotEncoder
+from sklearn.preprocessing import OneHotEncoder
+
+# Create OneHotEncoder: ohe
+ohe = OneHotEncoder(categorical_features = categorical_mask, sparse=False)
+
+# Apply OneHotEncoder to categorical columns - output is no longer a dataframe: df_encoded
+df_encoded = ohe.fit_transform(df)
+
+# Print first 5 rows of the resulting dataset - again, this will no longer be a pandas dataframe
+print(df_encoded[:5, :])
+
+# Print the shape of the original DataFrame
+print(df.shape)
+
+# Print the shape of the transformed array
+print(df_encoded.shape)
+
+
+"""
+OUTPUT:
+
+(1460, 21)
+(1460, 62)
+
+After one hot encoding, which creates binary variables out of the categorical variables, there are now 62 columns.
+
 """
