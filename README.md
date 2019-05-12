@@ -8,3 +8,4 @@ This is programs related to some of the coursework I'm doing regarding datascien
 dataset: https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease 
 
 Extra Links: https://github.com/scikit-learn-contrib/sklearn-pandas
+sklearn_pandas, that allows you to chain many more processing steps inside of a pipeline than are currently supported in scikit-learn.
