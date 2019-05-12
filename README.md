@@ -6,3 +6,5 @@ This is programs related to some of the coursework I'm doing regarding datascien
 
 
 dataset: https://archive.ics.uci.edu/ml/datasets/chronic_kidney_disease 
+
+Extra Links: https://github.com/scikit-learn-contrib/sklearn-pandas
